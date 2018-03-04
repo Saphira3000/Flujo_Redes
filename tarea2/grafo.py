@@ -10,7 +10,7 @@ class Grafo:
         with open("nodos.dat", 'a') as archivo:
             print(x,y,r, file = archivo)
 
-    def arista(self, u, v, d, p):
+    def arista(self,u,v,d,p):
         self.E.append((u,v,d,p)) 
       
     def grafica(self):
@@ -23,14 +23,11 @@ class Grafo:
             print('set xrange [-0.1:1.1]', file = archivo)
             print('set yrange [-0.1:1.1]', file = archivo)
             for v in self.E:
-                print(v)
                 u = v[0]
                 w = v[1]
-                #print(u)
-                #print(w)
                 (x1, y1) = self.V[u]
                 (x2, y2) = self.V[w]
-                if v[3] != 0: # ponderado
+                if v[3] != 0 and v[2] == False: # ponderado
                     print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'nohead lw {:f}'.format(v[3]), file = archivo)
                     i += 1
                 elif v[3] != 0 and v[2] == True: # ponderado y dirigido
@@ -42,7 +39,7 @@ class Grafo:
                 else: # simple
                     print('set arrow',i,'from', x1 , ',', y1, 'to', x2,',', y2,'nohead', file = archivo)
                     i += 1
-            print('plot "nodos.dat" using 1:2:3:3 with points pt 7 ps var lc var', file = archivo)
+            print('plot "nodos.dat" using 1:2:3 with points pt 7 ps var lc "purple"', file = archivo)
 		
 
 
