@@ -12,6 +12,8 @@ class Grafo:
 
     def arista(self,u,v,d,p):
         self.E.append((u,v,d,p))
+        if d == False:
+            self.E.append((v,u,d,p)) 
       
     def grafica(self):
         i = 1
@@ -41,17 +43,18 @@ class Grafo:
                     i += 1
             print('plot "nodos.dat" using 1:2:3 with points pt 7 ps var lc "purple"', file = archivo)
 
-    def floyd_warshall(self): 
+    def floyd_warshall(self): # algoritmo de Floyd-Warshall
         d = {}
         for v in self.V:
             d[(v, v)] = 0 # distancia reflexiva es cero
         for arista in self.E:
-            (v, u, m, p) = arista
-            if m:
-                d[(v, u)] = p
-            else:
-                d[(v, u)] = p
-                d[(u, v)] = p
+            (w, u, m, p) = arista
+            if u != w:            
+		#if m:
+                d[(w, u)] = p
+                #else:
+                    #d[(w, u)] = p
+                    #d[(u, w)] = p
         for intermedio in self.V:
             for desde in self.V:
                 for hasta in self.V:
@@ -87,7 +90,7 @@ class Grafo:
         else: # no se alcanzó
             return None
   
-    def ford_fulkerson(self, s, t): # algoritmo de Ford y Fulkerson
+    def ford_fulkerson(self, s, t): # algoritmo de Ford-Fulkerson
         if s == t:
             return 0
         maximo = 0
