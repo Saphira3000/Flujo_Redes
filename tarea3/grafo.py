@@ -8,18 +8,18 @@ class Grafo:
     def nodo(self,v,x,y,r):
         self.V[v] = (x,y)
         with open("nodos.dat", 'a') as archivo:
-            print(x,y,r, file = archivo)
+            print(x,y,r,v, file = archivo)
 
     def arista(self,u,v,d,p):
         self.E.append((u,v,d,p))
         if d == False:
             self.E.append((v,u,d,p)) 
       
-    def grafica(self):
+    def grafica(self, file_name):
         i = 1
         with open("grafo.plot", 'w') as archivo:
-            print('set term png', file = archivo)
-            print('set output "grafo.png"', file = archivo)
+            print('set term postscript eps enhanced color', file = archivo)
+            print('set output "', file_name, '" ', file = archivo)
             print('set size square', file = archivo)
             print('set key off', file = archivo)
             print('set xrange [-0.1:1.1]', file = archivo)
@@ -30,10 +30,11 @@ class Grafo:
                 (x1, y1) = self.V[u]
                 (x2, y2) = self.V[w]
                 if v[3] != 0 and v[2] == False: # ponderado
-                    print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'nohead lw {:f}'.format(v[3]), file = archivo)
+                    print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'nohead', file = archivo)
                     i += 1
                 elif v[3] != 0 and v[2] == True: # ponderado y dirigido
-                    print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'head filled size screen 0.03,15 lw {:f}'.format(v[3]), file = archivo)
+                    print('set label "', int(v[3]),'" at', (x1+x2)/2, ',', (y1+y2)/2, file = archivo)         
+                    print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'head filled size screen 0.03,15', file = archivo)
                     i += 1
                 elif v[2] == True: # dirigido
                     print('set arrow',i, 'from', x1,',',y1,'to',x2,',',y2, 'head filled size screen 0.03,15', file = archivo)
@@ -41,7 +42,9 @@ class Grafo:
                 else: # simple
                     print('set arrow',i,'from', x1 , ',', y1, 'to', x2,',', y2,'nohead', file = archivo)
                     i += 1
-            print('plot "nodos.dat" using 1:2:3 with points pt 7 ps var lc "purple"', file = archivo)
+            print('plot "nodos.dat" u 1:2:3 with circles lc "purple" fs solid 0.4, "nodos.dat" using 1:2:(sprintf("%d", $4)) with labels offset char 0,0 notitle', file = archivo)
+            print('reset', file = archivo)
+
 
     def floyd_warshall(self): # algoritmo de Floyd-Warshall
         d = {}
@@ -49,12 +52,11 @@ class Grafo:
             d[(v, v)] = 0 # distancia reflexiva es cero
         for arista in self.E:
             (w, u, m, p) = arista
-            if u != w:            
-		#if m:
+            if m:
                 d[(w, u)] = p
-                #else:
-                    #d[(w, u)] = p
-                    #d[(u, w)] = p
+            else:
+                d[(w, u)] = p
+                d[(u, w)] = p
         for intermedio in self.V:
             for desde in self.V:
                 for hasta in self.V:
