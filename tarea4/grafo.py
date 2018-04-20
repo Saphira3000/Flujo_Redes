@@ -117,7 +117,20 @@ class Grafo:
                 u = v
             maximo += incr
         return maximo
-                
 
-        
-
+    def clust_coef(self):
+        delta = {}
+        for nodo in self.V:
+            i = 0
+            a = self.vecinos[nodo]
+            n = len(a)
+            if n < 2:
+                delta[nodo] = 0
+            else: 
+                for v in a:
+                    for w in a:
+                        if v != w and (v, w, False, 0) in self.E:
+                            i += 1
+                i = i/2
+                delta[nodo] = (2*i/(n*(n-1)))
+        return(delta)
