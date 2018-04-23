@@ -120,6 +120,7 @@ class Grafo:
 
     def clust_coef(self):
         delta = {}
+        prom = 0
         for nodo in self.V:
             i = 0
             a = self.vecinos[nodo]
@@ -129,8 +130,16 @@ class Grafo:
             else: 
                 for v in a:
                     for w in a:
-                        if v != w and (v, w, False, 0) in self.E:
+                        if v != w and (v, w, False, 1) in self.E:
                             i += 1
                 i = i/2
                 delta[nodo] = (2*i/(n*(n-1)))
-        return(delta)
+                prom = prom + (2*i/(n*(n-1)))
+        prom = prom / len(self.V)
+        return(prom)
+
+    def arg_dist(self,n,k):
+        d = self.floyd_warshall()
+        prom = sum(d.values())/ len(d) # promedio distancia
+        s = (n/2) - (k-1) # cota distancia maxima
+        return(prom / s)
