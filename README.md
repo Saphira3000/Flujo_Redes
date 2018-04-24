@@ -1,2 +1,3 @@
 # Flujo_Redes
-Curso: flujo en redes
+UANL Maestrìa en ciencias en ingenierìa de sistemas
+Curso: Optimizaciòn de flujo en redes
